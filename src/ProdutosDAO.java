@@ -21,7 +21,6 @@ public class ProdutosDAO {
     Connection conn;
     PreparedStatement prep;
     ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     conectaDAO conecta;
     
     public ProdutosDAO() {
@@ -50,7 +49,26 @@ public class ProdutosDAO {
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
+        ArrayList<ProdutosDTO> listagem = new ArrayList<>();
         
+        String sql = "select * from produtos";
+        try {
+            PreparedStatement prep = this.conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+
+            while(resultset.next()) {
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(resultset.getInt("ID"));
+                p.setNome(resultset.getString("Nome"));
+                p.setValor(resultset.getInt("valor"));
+                p.setStatus(resultset.getString("status"));
+                listagem.add(p);
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println("Não foi possível listar os produtos " + ex.getMessage());
+            
+        }        
         return listagem;
     }
     
